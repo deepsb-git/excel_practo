@@ -612,3 +612,289 @@ If any part of the nested IF function results in an error, the formula returns t
 =IF(BF2<=7,"1. Below 7 days",IF(BF2<=15,"2. 8 to 15 days",IF(BF2<=30,"3. 16 to 30 days","4. Above 30 days")))
 
 =LOOKUP(BF2, {0, 8, 16, 31}, { "1. Below 7 days",  "2. 8 to 15 days", "3. 16 to 30 days", "4. Above 30 days"})
+
+
+Imp Validation Info uploaded in shared folder and pseudo code only shared:-
+---------------------------------------------------------------------------
+import java.util.*;
+import java.util.regex.*;
+import java.time.*;
+
+public class ClaimValidation {
+
+    // Hypothetical database access methods
+    private static Database db = new Database();
+
+    public static void main(String[] args) {
+        // Example FNOL data
+        Map<String, String> fnolData = new HashMap<>();
+        fnolData.put("PolicyNumber", "1234567890");
+        fnolData.put("InsuredName", "John Doe");
+        fnolData.put("InsuredAddress", "123 Main St, City, State, 12345");
+        fnolData.put("DateTimeOfLoss", "2025-04-29T10:00:00");
+        fnolData.put("LossLocation", "123 Main St, City, State, 12345");
+        fnolData.put("CauseOfLoss", "Fire");
+        fnolData.put("DescriptionOfLoss", "Fire damage to property");
+        fnolData.put("EstimatedLossAmount", "50000");
+        fnolData.put("ContactPersonName", "Jane Doe");
+        fnolData.put("ContactPersonPhone", "9876543210");
+        fnolData.put("ContactPersonEmail", "jane.doe@example.com");
+        fnolData.put("ClaimReportingPersonName", "John Smith");
+        fnolData.put("ClaimReportingPersonPhone", "1234567890");
+        fnolData.put("ClaimReportingPersonEmail", "john.smith@example.com");
+        fnolData.put("RelationWithInsured", "Owner");
+        fnolData.put("ClaimReferenceNumber", "REF123456");
+
+        // Validate FNOL data
+        validateFNOLData(fnolData);
+    }
+
+    private static void validateFNOLData(Map<String, String> fnolData) {
+        // Validate Policy Number / Certificate Number
+        String policyNumber = fnolData.get("PolicyNumber");
+        Policy policy = db.getPolicy(policyNumber);
+        if (policy == null) {
+            System.out.println("No Policy Found");
+            // Option to register as Orphan Claim
+            return;
+        }
+
+        if (policy.isMasterPolicy()) {
+            System.out.println("Please provide the Certificate Number for the Master Policy.");
+            return;
+        }
+
+        // Validate Insured Name & Address
+        String insuredName = fnolData.get("InsuredName");
+        String insuredAddress = fnolData.get("InsuredAddress");
+        if (!policy.getInsuredName().equals(insuredName)) {
+            System.out.println("Insured Name is not Matching");
+        }
+        if (!policy.getInsuredAddress().equals(insuredAddress)) {
+            System.out.println("Insured Address is not Matching");
+        }
+
+        // Validate Date & Time of Loss
+        LocalDateTime dateTimeOfLoss = LocalDateTime.parse(fnolData.get("DateTimeOfLoss"));
+        if (dateTimeOfLoss.isBefore(policy.getRiskInceptionDate()) || dateTimeOfLoss.isAfter(policy.getRiskExpiryDate())) {
+            System.out.println("Date & Time of Loss is outside the policy period. We cannot register the claim.");
+            return;
+        }
+
+        // Validate Loss Location
+        String lossLocation = fnolData.get("LossLocation");
+        if (!validateLossLocation(lossLocation, policy.getRiskLocations())) {
+            System.out.println("Loss Location does not match any of the risk locations.");
+        }
+
+        // Validate Cause of Loss
+        String causeOfLoss = fnolData.get("CauseOfLoss");
+        if (!db.isValidLossCause(causeOfLoss)) {
+            System.out.println("Invalid Cause of Loss. Please select a valid cause.");
+            return;
+        }
+
+        // Validate Contact Person Details
+        if (!validateContactDetails(fnolData.get("ContactPersonPhone"), fnolData.get("ContactPersonEmail"))) {
+            System.out.println("Invalid Contact Person details.");
+            return;
+        }
+
+        // Validate Claim Reporting Person Details
+        if (!validateContactDetails(fnolData.get("ClaimReportingPersonPhone"), fnolData.get("ClaimReportingPersonEmail"))) {
+            System.out.println("Invalid Claim Reporting Person details.");
+            return;
+        }
+
+        // If all validations pass, register the claim
+        registerClaim(fnolData);
+    }
+
+    private static boolean validateLossLocation(String lossLocation, List<String> riskLocations) {
+        // Implement logic to validate loss location against risk locations
+        // Example: Match PIN Code, District, Post Office, Street, Building
+        return riskLocations.contains(lossLocation);
+    }
+
+    private static boolean validateContactDetails(String phone, String email) {
+        // Validate phone number
+        if (!phone.matches("\\d{10}")) {
+            return false;
+        }
+        // Validate email address
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    private static void registerClaim(Map<String, String> fnolData) {
+        // Implement logic to register the claim in ABS
+        System.out.println("Claim registered successfully. Claim Number: " + generateClaimNumber());
+    }
+
+    private static String generateClaimNumber() {
+        // Implement logic to generate a unique claim number
+        return UUID.randomUUID().toString();
+    }
+
+    // Hypothetical Database class for demonstration purposes
+    static class Database {
+        public Policy getPolicy(String policyNumber) {
+            // Implement logic to fetch policy details from the database
+            return new Policy(policyNumber, "John Doe", "123 Main St, City, State, 12345", LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1), Arrays.asList("123 Main St, City, State, 12345"));
+        }
+
+        public boolean isValidLossCause(String causeOfLoss) {
+            // Implement logic to validate loss cause
+            return Arrays.asList("Fire", "Theft", "Flood").contains(causeOfLoss);
+        }
+    }
+
+    // Hypothetical Policy class for demonstration purposes
+    static class Policy {
+        private String policyNumber;
+        private String insuredName;
+        private String insuredAddress;
+        private LocalDateTime riskInceptionDate;
+        private LocalDateTime riskExpiryDate;
+        private List<String> riskLocations;
+
+        public Policy(String policyNumber, String insuredName, String insuredAddress, LocalDateTime riskInceptionDate, LocalDateTime riskExpiryDate, List<String> riskLocations) {
+            this.policyNumber = policyNumber;
+            this.insuredName = insuredName;
+            this.insuredAddress = insuredAddress;
+            this.riskInceptionDate = riskInceptionDate;
+            this.riskExpiryDate = riskExpiryDate;
+            this.riskLocations = riskLocations;
+        }
+
+        public String getPolicyNumber() {
+            return policyNumber;
+        }
+
+        public String getInsuredName() {
+            return insuredName;
+        }
+
+        public String getInsuredAddress() {
+            return insuredAddress;
+        }
+
+        public LocalDateTime getRiskInceptionDate() {
+            return riskInceptionDate;
+        }
+
+        public LocalDateTime getRiskExpiryDate() {
+            return riskExpiryDate;
+        }
+
+        public List<String> getRiskLocations() {
+            return riskLocations;
+        }
+
+        public boolean isMasterPolicy() {
+            // Implement logic to determine if the policy is a master policy
+            return false;
+        }
+    }
+}
+
+/*==============================================================================================================================================================================*/
+
+//EMAIL Validation Logic
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class EmailValidator {
+
+    // Define the regular expression for email validation
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
+
+    // Compile the pattern
+    private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
+
+    // Method to validate email
+    public static boolean isValidEmail(String email) {
+        if (email == null) {
+            return false;
+        }
+        // Create a matcher for the input email
+        Matcher matcher = pattern.matcher(email);
+        // Return whether the email matches the pattern
+        return matcher.matches();
+    }
+
+    public static void main(String[] args) {
+        // Test the email validator
+        String[] testEmails = {
+            "example@example.com",
+            "user.name+tag+sorting@example.com",
+            "user_name@example.co.uk",
+            "user-name@example.org",
+            "example@.com",
+            "@example.com",
+            "example@com"
+        };
+
+        for (String email : testEmails) {
+            System.out.println("Is the email \"" + email + "\" valid? " + isValidEmail(email));
+        }
+    }
+}
+
+
+
+
+
+//Pseudo Code for extract data from scanned copy 
+
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+import java.io.File;
+public class OCRProcessor {
+    public static void main(String[] args) {
+        File imageFile = new File("path/to/scanned/document.png"); 
+/*Data direct retrieve from absolute path in terms of scanned image whatever shared by PH and automatically validate as per the parameter whatever we set as per validation.*/
+        ITesseract instance = new Tesseract();
+        try {
+            // Perform OCR on the image file
+            String result = instance.doOCR(imageFile);
+            System.out.println("Extracted Text: " + result);
+            // Process the extracted text
+            processExtractedData(result);
+        } catch (TesseractException e) {
+            e.printStackTrace();
+        }
+    }
+    private static void processExtractedData(String data) {
+        // Example: Extract and validate policy number
+        String policyNumber = extractPolicyNumber(data);
+        if (validatePolicyNumber(policyNumber)) {
+            System.out.println("Valid Policy Number: " + policyNumber);
+            // Further processing, such as claim registration
+        } else {
+            System.out.println("Invalid Policy Number");
+        }
+    }
+    private static String extractPolicyNumber(String data) {
+        // Implement logic to extract policy number from the data
+        // Example: Use regex to find policy number pattern
+        String policyNumberPattern = "Policy Number: (\\d+)";
+        Pattern pattern = Pattern.compile(policyNumberPattern);
+        Matcher matcher = pattern.matcher(data);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+    private static boolean validatePolicyNumber(String policyNumber) {
+        // Implement validation logic
+        // Example: Check if policy number exists in the database
+        return policyNumber != null && policyNumber.length() == 10;
+    }
+}
+
+
