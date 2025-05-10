@@ -5,3 +5,62 @@ permanent set without system variable edit
 -------------------------------------------
 setx JAVA_HOME "D:\java\openjdk-11.0.27"
 setx PATH "%JAVA_HOME%\bin;%PATH%"
+
+
+Accessing jar from target folder we have to add below mentioned plugins in Pom
+-------------------------------------------------------------------------------
+<build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>org.digi.App</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+=================================================================================
+
+mysql run through zip file process
+----------------------------------
+Atfirst create two folder
+MySQL_Home
+MySQL_Data_Directory
+
+create my.ini file and save those script
+[mysqld]
+# set basedir to your installation path
+basedir="D:/MySQL_Home/"
+# set datadir to the location of your data directory
+datadir="D:/MySQL_Data_Directory/"
+
+then save it in MySQL_Home folder..
+
+
+"D:\MySQL_Home\bin\mysqld.exe" --datadir="D:\MySQL_Data_Directory" --port=3306 --console --initialize
+"D:\MySQL_Home\bin\mysqld.exe" --datadir="D:\MySQL_Data_Directory" --port=3306 --console
+
+
+another command line
+
+Start my sql in cmd through 33060 Port :-"D:\MySQL_Home\bin\mysql.exe" -uroot -p --port=3306
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'root';
+exit;
+
+Here password changed to root then again fired "D:\MySQL_Home\bin\mysql.exe" -uroot -p --port=3306 then put set password root..
+After that Bingo !!!
+
+Password :- root
+
+shoot this command for start :- mysql -u root -p  after that put passwor root
+
+
+
