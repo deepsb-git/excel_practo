@@ -1,2 +1,7 @@
 Play with docker :- labs.play-with-docker.com.
 Docker alternate :- https://github.com/containers/podman/releases
+
+permanent set without system variable edit
+-------------------------------------------
+setx JAVA_HOME "D:\java\openjdk-11.0.27"
+setx PATH "%JAVA_HOME%\bin;%PATH%"
