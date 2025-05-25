@@ -1,1 +1,24 @@
+T4MGG-L5GSW-OYLBJ-FSUXJ-LRRIR
+
+https://github.com/enterprises/GoDigitGeneralInsurance-EMU
+https://code.visualstudio.com/download
+
+https://github.com/login/oauth/authorize?client_id=01ab8ac9400c4e429b23&redirect_uri=https://vscode.dev/redirect&scope=user:email&state=vscode%253A%252F%252Fvscode.github-authentication%252Fdid-authenticate%253Fnonce%253D1925313f99a1c135%2526windowId%253D1&prompt=select_account
+
+
+https://github.com/enterprises/GoDigitGeneralInsurance-EMU/login/oauth/authorize?client_id=01ab8ac9400c4e429b23&redirect_uri=https://vscode.dev/redirect&scope=user:email&state=vscode%253A%252F%252Fvscode.github-authentication%252Fdid-authenticate%253Fnonce%253D1925313f99a1c135%2526windowId%253D1&prompt=select_account
+
+
+ssh key
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKKq1BDIV4Dym2GWCPlE2pHGrs28W3dZ/3eGB9geYt2T deepak.barik@godigit.com
+
+updated
+ssh-keygen -t ed25519 -C "b.dpk1729@gmail.com"
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIINee9Yo/h3J+wRvnmNxEuYEl7eLrBcgOaCEAWzQ01Yr b.dpk1729@gmail.com
+
+Personal Access Token(PAT)
+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
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDUTpuh4NX467RSvuR8XF58Reuag7INJPXCtd5eLge/ojz2RhZQxm0n1kKCBGJSjfcGrMQWd0zN4jOYTzsDYbLr0TTONaS7Pr55lDjja5pdL5EllRnaSS9r5WA95+yZm0+bQjGr2JjY7iWQc1wXKYeuVwgDIjNaA5DyhX27I/DZl8vYEUJfZN/Ecsnj9g4yT5Qko5ALfYbk2751bYZoHvhSvmFYyttH7Kntq+wzgTxN4wAIQ1N61LOxacXoisG8z2niRd0+UcTo+PyeuDyDlQLFVDqBx5cRR3oweGfgS22PHtWzcuYU4+LxPbfaNUgFe+ulpkXrCLo17875vbl3qaZM3VdZ4ZK4qlx6miXkH8BzWyrN88FBD8qVbbQJByP4npQJHqqjrsk9G70chUoLQ32LdNucYvPmkYF325yv0yNsVAld5LVAr03j9i3b27uzUde94gORL6uhnIiGsQE7pzRa5ADeiPvkw9I6QEZxnli7+S/6sEJFMkGA7UtrgRd+3BXrxUQi67eh1vlOzU+w3KIYFgA2quMdy1jGINAK8+V7DcPKmxSVmePyctAmjORyqZPhCvzX4ejowPvXukHIFhUW7vGVB5lfPv7ITBQUfoEDFp1KQfpJvGArFbc/KIEnboGOgjIaNjPyU3MI1pr92GOIzoATTXOEZW9/WbSpJZ5yyQ== b.dpk1729@gmail.com
+
 
